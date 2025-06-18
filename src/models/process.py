@@ -27,6 +27,54 @@ class Process:
         self.is_loading = True
         self._expected_value = None
         self._is_correct = False
+        self._st_time = None
+        self._actual_time = None
+        
+    def check_st_time(self, st_time: float, actual_time: float) -> bool:
+        """Check if actual time is within ST limits (10% tolerance).
+        
+        Args:
+            st_time: Standard time value
+            actual_time: Actual time taken
+            
+        Returns:
+            bool: True if within limits, False otherwise
+        """
+        if st_time is None or actual_time is None:
+            return True
+            
+        self._st_time = st_time
+        self._actual_time = actual_time
+        
+        # Calculate tolerance limits (10%)
+        min_time = st_time * 0.9  # 10% below ST
+        max_time = st_time * 1.1  # 10% above ST
+        
+        return min_time <= actual_time <= max_time
+        
+    def get_st_status(self) -> Dict[str, float]:
+        """Get current ST and actual time values.
+        
+        Returns:
+            Dictionary containing ST and actual time values
+        """
+        return {
+            'st_time': self._st_time,
+            'actual_time': self._actual_time
+        }
+        
+    def set_st_error(self, message: str):
+        """Set ST time error state."""
+        self._has_error = True
+        self._error_message = message
+        self.is_loading = False
+        self._is_correct = False
+        
+        if self.error_msg:
+            self.error_msg.config(text=message, fg="red")
+            self.stop_button.config(bg="red")
+            
+        self.log_error(message)
         
     def set_error(self, message: str, expected_value: str = None, actual_value: str = None):
         """Set error state with message and expected value."""
@@ -90,6 +138,7 @@ class Process:
 
     def show_no_material(self):
         """Show no material detected state."""
+        self.is_loading = False  # Stop the loading animation
         if self.text_label:
             self.text_label.config(text=f"Process {self.process_number}", fg="black")
             if self.error_msg:

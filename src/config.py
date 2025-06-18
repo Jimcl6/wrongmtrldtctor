@@ -110,6 +110,7 @@ SOUND_TITLES = {
     'Process1WrongHarness': 'Process1WrongHarness.mp3',
     'Process1WrongFrame': 'Process1WrongFrame.mp3',
     'Process1WrongBushing': 'Process1WrongBushing.mp3',
+    'Process1TimeDeviation': 'Process1TimeDeviation.mp3',
     
     # Process 2 sounds
     'Process2WrongM4X40Screw': 'Process2WrongM4X40Screw.mp3',
@@ -119,6 +120,7 @@ SOUND_TITLES = {
     'Process2WrongWasher': 'Process2WrongWasher.mp3',
     'Process2WrongLockNut': 'Process2WrongLockNut.mp3',
     'Process2WrongFrame': 'Process2WrongFrame.mp3',
+    'Process2TimeDeviation': 'Process2TimeDeviation.mp3',
     
     # Process 3 sounds
     'Process3WrongFrameGasket': 'Process3WrongFrameGasket.mp3',
@@ -135,6 +137,7 @@ SOUND_TITLES = {
     'Process3WrongCasingLeft': 'Process3WrongCasingLeft.mp3',
     'Process3WrongCasingRight': 'Process3WrongCasingRight.mp3',
     'Process3WrongHeadPacking': 'Process3WrongHeadPacking.mp3',
+    'Process3TimeDeviation': 'Process3TimeDeviation.mp3',
     
     # Process 4 sounds
     'Process4WrongTank': 'Process4WrongTank.mp3',
@@ -151,12 +154,15 @@ SOUND_TITLES = {
     'Process4WrongMufflerGasket': 'Process4WrongMufflerGasket.mp3',
     'Process4WrongFrameCover': 'Process4WrongFrameCover.mp3',
     'Process4WrongRubberLeg': 'Process4WrongRubberLeg.mp3',
+    'Process4TimeDeviation': 'Process4TimeDeviation.mp3',
     
     # Process 5 sounds
     'Process5WrongRatingLabel': 'Process5WrongRatingLabel.mp3',
+    'Process5TimeDeviation': 'Process5TimeDeviation.mp3',
     
     # Process 6 sounds
-    'Process6WrongVinyl': 'Process6WrongVinyl.mp3'
+    'Process6WrongVinyl': 'Process6WrongVinyl.mp3',
+    'Process6TimeDeviation': 'Process6TimeDeviation.mp3'
 }
 
 # UI configurations
