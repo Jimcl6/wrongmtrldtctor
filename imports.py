@@ -15,8 +15,8 @@ import xlrd
 import keyboard
 import threading
 import serial
-import time
 import logging
+import pymysql
 # Tkinter
 from tkinter import *
 import tkinter as tk

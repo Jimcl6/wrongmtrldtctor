@@ -6,6 +6,15 @@ import os
 # Debug mode flag
 DEBUG = False
 
+# Database configuration
+DB_CONFIG = {
+    'host': '192.168.2.148',
+    'database': 'fc_1_data_db',
+    'user': 'hpi.python',
+    'password': 'hpi.python',
+    'connect_timeout': 30
+}
+
 # Base paths
 BASE_CSV_PATH = r'\\192.168.2.10\csv\csv'
 SOUND_PATH = r'\\192.168.2.19\ai_team\AI Program\Programs\Individual Program\Sounds'
@@ -18,86 +27,92 @@ SERIAL_BAUD = 9600   # Default baud rate for PLC communication
 PROCESS_CONFIGS = {
     1: {
         'csv_path': os.path.join(BASE_CSV_PATH, 'VT1', 'Debug' if DEBUG else ''),
+        'table_name': 'process1_data',
         'model_codes': ['60CAT0213P', '60CAT0212P', '60CAT0202P', '60CAT0203P', 
                      '60CAT0902P', '60CAT0903P', '60CAT0905P', '60CAT0000P'],
         'material_checks': {
-            'Em2p': 'Process 1 Em2p',  # EM0580106P
-            'Em3p': 'Process 1 Em3p',  # EM0580107P
-            'Harness': 'Process 1 Harness',  # RC03221254-03A
-            'Frame': 'Process 1 Frame',  # FM05000102-01A/00A
-            'Bushing': 'Process 1 Bushing'  # CG00300500-02A
+            'Em2p': 'Process_1_Em2p',  # EM0580106P
+            'Em3p': 'Process_1_Em3p',  # EM0580107P
+            'Harness': 'Process_1_Harness',  # RC03221254-03A
+            'Frame': 'Process_1_Frame',  # FM05000102-01A/00A
+            'Bushing': 'Process_1_Bushing'  # CG00300500-02A
         }
     },
     2: {
         'csv_path': os.path.join(BASE_CSV_PATH, 'VT2', 'Debug' if DEBUG else ''),
+        'table_name': 'process2_data',
         'model_codes': ['60CAT0213P', '60CAT0212P', '60CAT0202P', '60CAT0203P',
                      '60CAT0902P', '60CAT0903P', '60CAT0905P', '60CAT0000P'],
         'material_checks': {
-            'M4x40 Screw': 'Process 2 M4x40 Screw',  # NE044014A0-B/NE044021A0
-            'Rod Blk': 'Process 2 Rod Blk',  # RDB5200200/FM03500100-01
-            'Df Blk': 'Process 2 Df Blk',  # DFB6600600/DFB6600610
-            'Df Ring': 'Process 2 Df Ring',  # DR06400400-01A
-            'Washer': 'Process 2 Washer',  # WA04090110-B
-            'Lock Nut': 'Process 2 Lock Nut'  # NT04090340-B/RDB4200801-01A
+            'M4x40 Screw': 'Process_2_M4x40_Screw',  # NE044014A0-B/NE044021A0
+            'Rod Blk': 'Process_2_Rod_Blk',  # RDB5200200/FM03500100-01
+            'Df Blk': 'Process_2_Df_Blk',  # DFB6600600/DFB6600610
+            'Df Ring': 'Process_2_Df_Ring',  # DR06400400-01A
+            'Washer': 'Process_2_Washer',  # WA04090110-B
+            'Lock Nut': 'Process_2_Lock_Nut'  # NT04090340-B/RDB4200801-01A
         }
     },
     3: {
         'csv_path': os.path.join(BASE_CSV_PATH, 'VT3', 'Debug' if DEBUG else ''),
+        'table_name': 'process3_data',
         'model_codes': ['60CAT0213P', '60CAT0212P', '60CAT0202P', '60CAT0203P',
                      '60CAT0902P', '60CAT0903P', '60CAT0905P', '60CAT0000P'],
         'material_checks': {
-            'Frame Gasket': 'Process 3 Frame Gasket',  # PK01501131-01/PK01501133-00
-            'Casing Blk': 'Process 3 Casing Block',  # CSB6400802
-            'Casing Gasket': 'Process 3 Casing Gasket',  # PK01501140-00/PK01501143-00
-            'M4x16 Screw 1': 'Process 3 M4x16 Screw 1',  # NE041614A0-B
-            'M4x16 Screw 2': 'Process 3 M4x16 Screw 2',  # NE041617A7-B
-            'Ball Cushion': 'Process 3 Ball Cushion',  # DK01400104-00/DK01400102-01
-            'Frm Cover': 'Process 3 Frame Cover',  # NI08170103-03
-            'Partition Board': 'Process 3 Partition Board',  # LK13000100-01A
-            'Tube 1': 'Process 3 Built In Tube 1',  # LK00900200-00
-            'Tube 2': 'Process 3 Built In Tube 2', # BC08000300-02A
-            'Head Cover': 'Process 3 Head Cover', # HC08000100-00
-            'Casing Packing': 'Process 3 Casing Packing', # CP08000100-00
-            'M4x12 Screw': 'Process 3 M4x12 Screw', # NE041214A0-B
-            'Csb L': 'Process 3 Csb L', # CSB6400801
-            'Csb R': 'Process 3 Csb R', # CSB6400802
-            'Head Packing': 'Process 3 Head Packing' # HP08000100-00
+            'Frame Gasket': 'Process_3_Frame_Gasket',  # PK01501131-01/PK01501133-00
+            'Casing Blk': 'Process_3_Casing_Blk',  # CSB6400802
+            'Casing Gasket': 'Process_3_Casing_Gasket',  # PK01501140-00/PK01501143-00
+            'M4x16 Screw 1': 'Process_3_M4x16_Screw_1',  # NE041614A0-B
+            'M4x16 Screw 2': 'Process_3_M4x16_Screw_2',  # NE041617A7-B
+            'Ball Cushion': 'Process_3_Ball_Cushion',  # DK01400104-00/DK01400102-01
+            'Frm Cover': 'Process_3_Frm_Cover',  # NI08170103-03
+            'Partition Board': 'Process_3_Partition_Board',  # LK13000100-01A
+            'Tube 1': 'Process_3_Built_In_Tube_1',  # LK00900200-00
+            'Tube 2': 'Process_3_Built_In_Tube_2', # BC08000300-02A
+            'Head Cover': 'Process_3_Head_Cover', # HC08000100-00
+            'Casing Packing': 'Process_3_Casing_Packing', # CP08000100-00
+            'M4x12 Screw': 'Process_3_M4x12_Screw', # NE041214A0-B
+            'Csb L': 'Process_3_Csb_L', # CSB6400801
+            'Csb R': 'Process_3_Csb_R', # CSB6400802
+            'Head Packing': 'Process_3_Head_Packing' # HP08000100-00
         }
     },
     4: {
         'csv_path': os.path.join(BASE_CSV_PATH, 'VT4', 'Debug' if DEBUG else ''),
+        'table_name': 'process4_data',
         'model_codes': ['60CAT0213P', '60CAT0212P', '60CAT0202P', '60CAT0203P',
                      '60CAT0902P', '60CAT0903P', '60CAT0905P', '60CAT0000P'],
         'material_checks': {
-            'Tank': 'Process 4 Tank',  # TK08000603-09/TKB8000602
-            'Upper Housing': 'Process 4 Upper Housing',  # PK01501142-02/PK01501141-01
-            'Cord Hook': 'Process 4 Cord Hook',  # PK01501132-01/NI08170102-00
-            'M4x16 Screw': 'Process 4 M4x16 Screw',  # NE041201A0
-            'Tank Gasket': 'Process 4 Tank Gasket',  # NE04402130/NE044021A0
-            'Tank Cover': 'Process 4 Tank Cover',  # HU06020011-03A/HU06020001-01
-            'Housing Gasket': 'Process 4 Housing Gasket',  # NE041614A0-B
-            'M4x40 Screw': 'Process 4 M4x40 Screw', # NE044014A0-B
-            'Partition Gasket': 'Process 4 PartitionGasket', # PG08000100-00
-            'M4x12 Screw': 'Process 4 M4x12 Screw', # NE041214A0-B
-            'Muffler': 'Process 4 Muffler', # MU08000100-00
-            'Muffler Gasket': 'Process 4 Muffler Gasket', # MG08000100-00
-            'VCR': 'Process 4 VCR'
+            'Tank': 'Process_4_Tank',  # TK08000603-09/TKB8000602
+            'Upper Housing': 'Process_4_Upper_Housing',  # PK01501142-02/PK01501141-01
+            'Cord Hook': 'Process_4_Cord_Hook',  # PK01501132-01/NI08170102-00
+            'M4x16 Screw': 'Process_4_M4x16_Screw',  # NE041201A0
+            'Tank Gasket': 'Process_4_Tank_Gasket',  # NE04402130/NE044021A0
+            'Tank Cover': 'Process_4_Tank_Cover',  # HU06020011-03A/HU06020001-01
+            'Housing Gasket': 'Process_4_Housing_Gasket',  # NE041614A0-B
+            'M4x40 Screw': 'Process_4_M4x40_Screw', # NE044014A0-B
+            'Partition Gasket': 'Process_4_Partition_Gasket', # PG08000100-00
+            'M4x12 Screw': 'Process_4_M4x12_Screw', # NE041214A0-B
+            'Muffler': 'Process_4_Muffler', # MU08000100-00
+            'Muffler Gasket': 'Process_4_Muffler_Gasket', # MG08000100-00
+            'VCR': 'Process_4_VCR'
         }
     },
     5: {
         'csv_path': os.path.join(BASE_CSV_PATH, 'VT5', 'Debug' if DEBUG else ''),
+        'table_name': 'process5_data',
         'model_codes': ['60CAT0213P', '60CAT0212P', '60CAT0202P', '60CAT0203P',
                      '60CAT0902P', '60CAT0903P', '60CAT0905P', '60CAT0000P'],
         'material_checks': {
-            'Rating Label': 'Process 5 Rating Label'  # BC06070400-00
+            'Rating Label': 'Process_5_Rating_Label'  # BC06070400-00
         }
     },
     6: {
         'csv_path': os.path.join(BASE_CSV_PATH, 'VT6', 'Debug' if DEBUG else ''),
+        'table_name': 'process6_data',
         'model_codes': ['60CAT0213P', '60CAT0212P', '60CAT0202P', '60CAT0203P',
                      '60CAT0902P', '60CAT0903P', '60CAT0905P', '60CAT0000P'],
         'material_checks': {
-            'Vinyl': 'Process 6 Vinyl' # NE041205A0
+            'Vinyl': 'Process_6_Vinyl' # NE041205A0
         }
     }
 }

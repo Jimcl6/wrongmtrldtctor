@@ -8,10 +8,11 @@ from datetime import datetime
 class Process:
     """Represents a single manufacturing process."""
     
-    def __init__(self, process_number: int, csv_path: str, model_codes: List[str], material_checks: Dict[str, str]):
+    def __init__(self, process_number: int, csv_path: str, table_name: str, model_codes: List[str], material_checks: Dict[str, str]):
         """Initialize process."""
         self.process_number = process_number
         self.csv_path = csv_path
+        self.table_name = table_name
         self.model_codes = model_codes
         self.material_checks = material_checks
         
@@ -29,6 +30,7 @@ class Process:
         self._is_correct = False
         self._st_time = None
         self._actual_time = None
+        self._last_record_id = None  # Track last processed record
         
     def check_st_time(self, st_time: float, actual_time: float) -> bool:
         """Check if actual time is within ST limits (10% tolerance).

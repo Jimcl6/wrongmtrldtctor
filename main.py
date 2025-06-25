@@ -15,7 +15,7 @@ def main():
     
     # Create process instances
     processes = {
-        num: Process(num, config['csv_path'], config['model_codes'], config['material_checks'])
+        num: Process(num, config['csv_path'], config['table_name'], config['model_codes'], config['material_checks'])
         for num, config in PROCESS_CONFIGS.items()
     }
     

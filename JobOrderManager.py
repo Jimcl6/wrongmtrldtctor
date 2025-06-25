@@ -26,9 +26,8 @@ def check_job_orders():
     pd.set_option('display.max_columns', None)
     pd.set_option('display.max_rows', None)
 
-    main_dir = r'\\192.168.2.19\ai_team\AI Program\Outputs\JobOrder'
-    os.chdir(main_dir)
-    data_frames = pd.read_csv('JobOrderSerials.csv', encoding='latin1')
+    # main_dir = r'\\192.168.2.19\ai_team\AI Program\Outputs\JobOrder'
+    data_frames = pd.read_csv(fr'\\192.168.2.19\ai_team\AI Program\Outputs\JobOrder\JobOrderSerials.csv', encoding='latin1')
 
     read_job_order = data_frames["Job Order No"].tail(1).values[0]
     return read_job_order
