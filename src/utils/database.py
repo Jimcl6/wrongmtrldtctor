@@ -93,7 +93,6 @@ class DatabaseManager:
         SELECT *
         FROM `{table_name}`
         WHERE `Process_{process_number}_Regular_Contractual` LIKE '%REG%'
-        ORDER BY `ID` DESC
         LIMIT 1
         """
         

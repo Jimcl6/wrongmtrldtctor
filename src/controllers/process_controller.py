@@ -9,7 +9,7 @@ from typing import Dict, Optional
 import JobOrderManager as JOManager
 from ..models.process import Process
 from ..utils.sound import SoundManager
-from ..utils.database import db_manager
+from ..database.process_repository import ProcessRepository
 
 class ProcessController:
     """Controls and monitors manufacturing processes."""
@@ -27,10 +27,8 @@ class ProcessController:
         self.is_speaking = False
         self.monitor_threads = {}
         self.correct_state_timers = {}
-        
-        # Initialize database connection
-        if not db_manager.test_connection():
-            print("Warning: Database connection failed. Process monitoring may not work properly.")
+        self.process_repository = ProcessRepository()
+        self.last_processed_datetime = {process_num: None for process_num in processes.keys()}
         
     def start_monitoring(self):
         """Start monitoring all processes."""
@@ -49,11 +47,10 @@ class ProcessController:
         self.running = False
         for thread in self.monitor_threads.values():
             thread.join()
-        db_manager.disconnect()
         
     def _monitor_process(self, process: Process):
         """Monitor a single process for material errors using database."""
-        print(f"Monitoring process {process.process_number} from table: {process.table_name}")
+        print(f"Monitoring process {process.process_number}")
         
         while self.running:
             try:
@@ -62,16 +59,17 @@ class ProcessController:
                     process.update_loading_text()
                 
                 # Get latest data from database
-                df = db_manager.get_latest_process_data(process.table_name, process.process_number)
+                latest_data = self.process_repository.get_latest_process_data(process.process_number)
                 
-                if df is not None and not df.empty:
-                    # Check if this is a new record
-                    current_record_id = df.index[0] if not df.empty else None
+                if latest_data:
+                    datetime_column = f'Process_{process.process_number}_DateTime'
+                    current_datetime = latest_data[datetime_column]
                     
-                    if current_record_id != process._last_record_id:
-                        print(f"New data detected in process {process.process_number}")
-                        self._handle_new_data(process, df)
-                        process._last_record_id = current_record_id
+                    # Check if we've processed this data before
+                    if current_datetime != self.last_processed_datetime[process.process_number]:
+                        print(f"New data detected for process {process.process_number} at {current_datetime}")
+                        self._handle_new_data(process, latest_data)
+                        self.last_processed_datetime[process.process_number] = current_datetime
                 else:
                     print(f"No data found for process {process.process_number}")
                     
@@ -80,15 +78,15 @@ class ProcessController:
                 
             time.sleep(1)
                 
-    def _handle_new_data(self, process: Process, df: pd.DataFrame):
+    def _handle_new_data(self, process: Process, data: dict):
         """Handle new data from database for a process."""
         error_detected = False
         
         try:
             # Get the repaired action value
             repaired_action_col = f"Process_{process.process_number}_Repaired_Action"
-            if repaired_action_col in df.columns:
-                repaired_action = df[repaired_action_col].values[0]
+            if repaired_action_col in data:
+                repaired_action = data[repaired_action_col]
                 print(f"Process {process.process_number} Repaired Action: {repaired_action}")
                 
                 if repaired_action == "-":
@@ -98,15 +96,33 @@ class ProcessController:
                     
                     # Get model code
                     model_code_col = f"Process_{process.process_number}_Model_Code"
-                    if model_code_col in df.columns:
-                        model_code = df[model_code_col].values[0]
+                    if model_code_col in data:
+                        model_code = data[model_code_col]
                         print(f"Process {process.process_number} Model Code: {model_code}")
                         
-                        if model_code in process.model_codes:
+                        # Check ST time if columns exist
+                        st_column = f"Process_{process.process_number}_ST"
+                        actual_time_column = f"Process_{process.process_number}_Actual_Time"
+                        
+                        if st_column in data and actual_time_column in data:
+                            st_time = float(data[st_column]) if data[st_column] else None
+                            actual_time = float(data[actual_time_column]) if data[actual_time_column] else None
+                            
+                            print(f"ST Time: {st_time}, Actual Time: {actual_time}")
+                            
+                            if not process.check_st_time(st_time, actual_time):
+                                error_detected = True
+                                error_msg = f"Time Deviation in Process {process.process_number}"
+                                sound_title = f"Process{process.process_number}TimeDeviation"
+                                process.set_st_error(error_msg)
+                                print(f"Time deviation detected in process {process.process_number}")
+                                self._play_error_sound(process, sound_title)
+                        
+                        if model_code in process.model_codes and not error_detected:
                             material_name_mp3 = ''
                             for material_name, column_name in process.material_checks.items():
-                                if column_name in df.columns:
-                                    material_code = df[column_name].values[0]
+                                if column_name in data:
+                                    material_code = data[column_name]
                                     if not any(material_code == valid_code for valid_code in JOManager.job_order_materials):
                                         if material_name == 'Casing Blk':
                                             material_name_mp3 = 'CSB'
